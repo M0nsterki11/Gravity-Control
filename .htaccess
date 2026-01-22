@@ -1,0 +1,36 @@
+# --- UKLJUČI EXPIRES MODUL (cache po tipu fajla) ---
+<IfModule mod_expires.c>
+  ExpiresActive On
+
+  # default (ako ne upadne ni u što posebno)
+  ExpiresDefault "access plus 1 hour"
+
+  # CSS & JS
+  ExpiresByType text/css "access plus 1 year"
+  ExpiresByType application/javascript "access plus 1 year"
+  ExpiresByType text/javascript "access plus 1 year"
+
+  # Slike
+  ExpiresByType image/jpeg "access plus 1 year"
+  ExpiresByType image/png "access plus 1 year"
+  ExpiresByType image/webp "access plus 1 year"
+  ExpiresByType image/gif "access plus 1 year"
+  ExpiresByType image/svg+xml "access plus 1 year"
+
+  # Video (tvoj background / promo video)
+  ExpiresByType video/mp4 "access plus 1 year"
+</IfModule>
+
+# --- CACHE-CONTROL HEADERI ZA STATIKU ---
+<IfModule mod_headers.c>
+  # Jako dugi cache za statiku (slike, css, js, video)
+  <FilesMatch "\.(css|js|jpg|jpeg|png|gif|webp|svg|mp4)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+
+  # Dinamične stvari (php/html) NE cache-aj
+  <FilesMatch "\.(php|html)$">
+    Header set Cache-Control "no-store, no-cache, must-revalidate, max-age=0"
+    Header set Pragma "no-cache"
+  </FilesMatch>
+</IfModule>

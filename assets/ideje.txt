@@ -1,0 +1,48 @@
+proširiti backend da ima admin stranicu gdje ti iz baze vadiš popis rezervacija
+
+ili dodati tablicu sessions u bazu i puniti termine direktno iz SQL-a umjesto hardcodanog niza u main.js. ??????
+
+#######################
+Ako ćeš to jednog dana staviti online (pravi hosting)
+
+Tada:
+
+“samo znamo link” nije prava sigurnost
+
+trebali bismo dodati admin login:
+
+npr. posebna tablica admins ili flag is_admin u users
+
+admin se prvo ulogira
+
+admin_reservations.php na vrhu provjeri je li user admin (session)
+
+ako nije → redirect na login
+
+########################
+
+Tabalicxa natjecanja s bodovcima i mjestijma
+
+###################
+
+Rate limiting
+
+#######################
+
+Caching
+
+########################
+
+CDNs for responsivness
+
+#########################
+
+Za tvoj use-case idealno je:
+
+Ovaj app-level MySQL rate limit (što smo upravo implementirali).
+
+Kad ideš na pravi server:
+
+Ako koristiš Cloudflare ili sličan WAF, upali njihov rate limiting na /backend/login.php i /backend/register.php.
+
+Ako imaš svoj VPS s nginx/Apache, možeš još dodati i server-level limit (nije nužno, ali je + sloj zaštite).

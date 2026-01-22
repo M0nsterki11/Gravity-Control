@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+  <meta charset="UTF-8">
+  <title>Gravity Control</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+
+  <!-- Ikone -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  <!-- AOS (scroll animacije) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" />
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="css/main.css?v=1.4">
+
+  <!-- JS -->
+  <script src="js/main.js?v=1"></script>
+
+</head>
+<body>
+  <div id="toast" class="toast"></div>
+  <div class="bg-overlay"></div>
+  <canvas id="bg-particles"></canvas>
+
+  <!-- NAVBAR -->
+  <header class="main-header">
+    <div class="logo">
+      <span>GRAVITY</span><span>CONTROL</span>
+    </div>
+
+    <!-- Burger button -->
+    <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+
+    <!-- Nav links -->
+    <nav class="nav-links" id="nav-links">
+      <ul>
+        <li><a href="#hero">Početna</a></li>
+        <li><a href="#trainers">Treneri</a></li>
+        <li><a href="#schedule">Termini</a></li>
+        <li><a href="#gallery">Galerija</a></li>
+        <li><a href="#location">Lokacija</a></li>
+      </ul>
+    </nav>
+
+     <!-- DESNA STRANA: social + auth -->
+    <div class="header-right">
+      <div class="header-social">
+        <a
+          href="https://www.instagram.com/_gravitycontrol/"
+          class="footer-ig-link header-social-link"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <i class="fa-brands fa-instagram"></i>
+        </a>
+        <a
+          href="https://www.tiktok.com/@bartolecteoo"
+          class="footer-ig-link header-social-link"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <i class="fa-brands fa-tiktok"></i>
+        </a>
+      </div>
+
+    <div class="auth-buttons" id="auth-buttons">
+    <!-- Guest state: Login / Register -->
+      <div class="auth-guest" id="auth-guest">
+        <button class="btn btn-outline" id="login-btn">Login</button>
+        <button class="btn btn-primary" id="register-btn">Register</button>
+      </div>
+
+    <!-- Logged-in state: Profile / Logout -->
+      <div class="auth-user" id="auth-user">
+        <button class="btn btn-outline profile-btn" id="profile-btn">Profile</button>
+        <button class="btn btn-outline logout-btn" id="logout-btn">Logout</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- AUTH MODAL -->
+  <div class="modal-backdrop" id="auth-modal">
+    <div class="modal-content" data-aos="zoom-in">
+      <button class="modal-close" id="modal-close" aria-label="Zatvori modal">&times;</button>
+      <div class="modal-toggle">
+        <button class="tab-btn active" data-tab="login-form">Login</button>
+        <button class="tab-btn" data-tab="register-form">Register</button>
+      </div>
+
+      <!-- LOGIN FORM -->
+      <form id="login-form" class="auth-form active">
+        <h2>Login</h2>
+        <label>Email
+          <input type="email" name="email" required placeholder="you@example.com">
+        </label>
+
+        <label>Lozinka
+          <div class="password-wrapper">
+            <input
+              type="password"
+              name="password"
+              id="login-password"
+              required
+              placeholder="••••••••"
+            >
+            <button
+              type="button"
+              class="password-toggle"
+              data-target="login-password"
+              aria-label="Prikaži lozinku"
+            >
+              <i class="fa-regular fa-eye"></i>
+            </button>
+          </div>
+        </label>
+
+        <button type="submit" class="btn btn-primary full-width">Prijavi se</button>
+        <p class="auth-hint">* Backend i SQL logiku dodaš kasnije.</p>
+      </form>
+
+      <!-- REGISTER FORM -->
+      <form id="register-form" class="auth-form">
+        <h2>Registracija</h2>
+        <label>Ime i prezime
+          <input type="text" name="fullName" required placeholder="Ime Prezime">
+        </label>
+        <label>Email
+          <input type="email" name="email" required placeholder="you@example.com">
+        </label>
+        <label>Lozinka
+          <div class="password-wrapper">
+            <input
+              type="password"
+              name="password"
+              id="register-password"
+              required
+              minlength="6"
+              placeholder="Minimalno 6 znakova"
+            >
+            <button
+              type="button"
+              class="password-toggle"
+              data-target="register-password"
+              aria-label="Prikaži lozinku"
+            >
+              <i class="fa-regular fa-eye"></i>
+            </button>
+          </div>
+        </label>
+
+        <label>Potvrda lozinke
+          <div class="password-wrapper">
+            <input
+              type="password"
+              name="confirmPassword"
+              id="register-confirm-password"
+              required
+              minlength="6"
+              placeholder="Ponovi lozinku"
+            >
+            <button
+              type="button"
+              class="password-toggle"
+              data-target="register-confirm-password"
+              aria-label="Prikaži lozinku"
+            >
+              <i class="fa-regular fa-eye"></i>
+            </button>
+          </div>
+        </label>
+
+        <button type="submit" class="btn btn-primary full-width">Kreiraj račun</button>
+        <p class="auth-hint">* Spoji na SQL bazu prema svojoj backend logici.</p>
+      </form>
+    </div>
+  </div>
+
+  <!-- HERO SEKCIJA -->
+  <section id="hero" class="hero-section">
+    <div class="hero-content" data-aos="fade-up">
+      <div class="hero-title">
+        <h1>
+          <span class="gravity-word gravity-top">GRAVITY</span>
+          <span class="gravity-word gravity-bottom">CONTROL</span>
+        </h1>
+      </div>
+      <p class="hero-subtitle">
+        Hardcore dvorana za ljude koji žele poboljšati tijelo, ojačati se i naučiti nove skillove.
+        Filozofija: <strong>hard work pays off, no pain no gain</strong>.
+      </p>
+      <div class="hero-cta">
+        <button class="btn btn-primary" id="hero-register">Prijavi se na trening</button>
+        <button class="btn btn-ghost" onclick="document.getElementById('schedule').scrollIntoView({behavior:'smooth'});">
+          Pogledaj termine
+        </button>
+      </div>
+      <div class="hero-tags">
+        <span>#gravitymovement</span>
+        <span>#nopainnogain</span>
+        <span>#undergroundgym</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- VIDEO SECTION (HORIZONTALNI VIDEO) -->
+  <section id="video" class="video-section" data-aos="fade-up">
+    <h2>Gravity Session</h2>
+    <div class="video-placeholder">
+      <video
+        src="assets/GravityVideo.mp4"
+        autoplay
+        muted
+        loop
+        playsinline
+      ></video>
+    </div>
+  </section>
+
+  <!-- TERMINI / SCHEDULE -->
+  <section id="schedule" class="section schedule-section" data-aos="fade-up">
+    <div class="section-header">
+      <h2>Termini treninga</h2>
+       <!--(spoji na backend / SQL).-->
+    </div>
+
+    <div class="schedule-table-wrapper">
+      <div class="schedule-table-scroll">
+        <table class="schedule-table">
+          <thead>
+            <tr>
+              <th>Dan</th>
+              <th>Vrijeme</th>
+              <th>Tip treninga</th>
+              <th>Trener</th>
+              <th>Rezervacija</th>
+            </tr>
+          </thead>
+          <tbody id="schedule-body">
+            <!-- Popunjava se iz main.js (dummy data) -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- TRENERI -->
+  <section id="trainers" class="section trainers-section" data-aos="fade-up">
+    <div class="section-header">
+      <h2>Treneri</h2>
+      <p>Privatni i grupni treninzi, fokus na skill, snagu i disciplinu.</p>
+    </div>
+
+    <div class="trainers-grid">
+      <!-- ZUGEC -->
+      <article class="trainer-card">
+        <div class="trainer-image">
+          <img src="assets/zugec.jpg" alt="Trener Zugec">
+        </div>
+        <div class="trainer-content">
+          <h3>Zugec</h3>
+          <p class="trainer-role">Strength & Movement Coach</p>
+          <p>
+            Mateo Žugec je vrhunski hrvatski gimnastičar iz Varaždina i član GK Vindija,
+            specijaliziran za konja s hvataljkama. Osvajač je zlatne medalje na
+            Mediteranskim igrama u Oranu te više finala i medalja Svjetskih Challenge
+            kupova.
+          </p>
+          <p>
+            U Gravity Controlu Mateo prenosi iskustvo vrhunskog sporta na treninge
+            snage i pokretljivosti – fokus na kvalitetnu tehniku, kontrolu tijela i
+            disciplinu koja stoji iza rezultata na najvećoj razini.
+          </p>
+        </div>
+      </article>
+
+      <!-- BARTOLEC -->
+      <article class="trainer-card">
+        <div class="trainer-image">
+          <img src="assets/bartolec.jpg" alt="Trener Bartolec">
+        </div>
+        <div class="trainer-content">
+          <h3>Bartolec</h3>
+          <p class="trainer-role">Skill & Conditioning Coach</p>
+          <p>
+            Teo Bartolec je hrvatski gimnastičar i član GK Vindija, specijalist za
+            vježbu na parteru. Višestruki je juniorski prvak države i osvajač
+            međunarodnih turnira, član hrvatske reprezentacije s nastupima
+            na europskim prvenstvima i Svjetskim kupovima.
+          </p>
+          <p>
+            U Gravity Controlu Teo vodi skill & conditioning treninge – kombinira
+            eksplozivnost, koordinaciju i snagu, s naglaskom na progresivne elemente,
+            akrobatiku i “competition-ready” kondiciju.
+          </p>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- GALERIJA -->
+  <section id="gallery" class="section gallery-section" data-aos="fade-up">
+    <div class="section-header">
+      <h2>Galerija</h2>
+      <p>Random slike teretane – kasnije zamijeni svojim fotkama.</p>
+    </div>
+    <div class="gallery-grid">
+      <div class="gallery-item">
+        <img src="https://images.pexels.com/photos/1552249/pexels-photo-1552249.jpeg" alt="Gym 1" class="lightbox-image">
+      </div>
+      <div class="gallery-item">
+        <img src="https://images.pexels.com/photos/2261485/pexels-photo-2261485.jpeg" alt="Gym 2" class="lightbox-image">
+      </div>
+      <div class="gallery-item">
+        <img src="https://images.pexels.com/photos/1431283/pexels-photo-1431283.jpeg" alt="Gym 3" class="lightbox-image">
+      </div>
+      <div class="gallery-item">
+        <img src="https://images.pexels.com/photos/7676403/pexels-photo-7676403.jpeg" alt="Gym 4" class="lightbox-image">
+      </div>
+    </div>
+  </section>
+
+  <!-- LOKACIJA (GOOGLE MAPS ARENA VARAŽDIN) -->
+  <section id="location" class="section location-section" data-aos="fade-up">
+    <div class="section-header">
+      <h2>Lokacija</h2>
+      <p>Trening kamp uz Arenu Varaždin.</p>
+    </div>
+    <div class="location-content">
+      <div class="location-info">
+        <h3>Arena Varaždin</h3>
+        <p>Šetalište Franje Tuđmana 1, 42000 Varaždin</p>
+        <ul class="location-list">
+          <li><i class="fa-solid fa-dumbbell"></i> Strength & conditioning zona</li>
+          <li><i class="fa-solid fa-people-group"></i> Grupni treninzi & privatne sesije</li>
+          <li><i class="fa-solid fa-fire"></i> No excuses policy – hard work only</li>
+        </ul>
+      </div>
+      <div class="map-wrapper">
+        <iframe
+          title="Arena Varaždin"
+          src="https://www.google.com/maps?q=Arena%20Vara%C5%BEdin&output=embed"
+          width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade">
+        </iframe>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="main-footer">
+  <div class="footer-left">
+    <p>© <span id="year"></span> Gravity Control. All rights reserved.</p>
+  </div>
+
+  <div class="footer-right">
+    <div class="footer-ig">
+      <a
+        href="https://www.instagram.com/_gravitycontrol/"
+        class="footer-ig-link"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <i class="fa-brands fa-instagram"></i>
+      </a>
+      <a
+        href="https://www.tiktok.com/@bartolecteoo"
+        class="footer-ig-link"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <i class="fa-brands fa-tiktok"></i>
+      </a>  
+    </div>
+
+    <div class="footer-phrase">
+      <span>Hard work pays off.</span>
+    </div>
+    <div class="footer-phrase2"></div>
+      <span>No pain, no gain.</span>
+    </div>
+  </div>
+</footer>
+
+   <!-- Image lightbox -->
+  <div id="image-lightbox" class="image-lightbox">
+    <div class="image-lightbox-content">
+      <button class="image-lightbox-close" aria-label="Zatvori sliku">&times;</button>
+      <img id="image-lightbox-img" src="" alt="">
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+</body>
+</html>
