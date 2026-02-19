@@ -285,11 +285,28 @@ function setupProfileAndLogout() {
   }
 
   if (logoutBtn) {
-    logoutBtn.addEventListener("click", () => {
-      currentUser = null;
-      localStorage.removeItem("gravityUser");
-      updateAuthUI();
-      showToast("Uspješno si se odjavio.", "success");
+    logoutBtn.addEventListener("click", async () => {
+      try {
+        const res = await fetch("backend/logout.php", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          }
+        });
+
+        const data = await res.json();
+
+        currentUser = null;
+        localStorage.removeItem("gravityUser");
+        updateAuthUI();
+        showToast(data.message || "Uspješno si se odjavio.", "success");
+      } catch (err) {
+        console.error(err);
+        currentUser = null;
+        localStorage.removeItem("gravityUser");
+        updateAuthUI();
+        showToast("Odjava lokalno završena, ali server logout nije uspio.", "error");
+      }
     });
   }
 }
@@ -473,7 +490,6 @@ async function populateSchedule() {
               "Content-Type": "application/json"
             },
             body: JSON.stringify({
-              userId: currentUser.id,
               sessionId,
               sessionInfo
             })

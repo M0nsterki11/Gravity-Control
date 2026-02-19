@@ -8,7 +8,7 @@ header('Access-Control-Allow-Origin: *');
 header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
 header('Pragma: no-cache');
 
-// max 5 registracija / 10 minuta / IP
+// max 5 registracija u 10 minuta po IP
 $ip = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
 $rateKey = 'register:' . $ip;
 

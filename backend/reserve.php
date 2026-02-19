@@ -9,20 +9,31 @@ header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
 header('Pragma: no-cache');
 
 $input = json_decode(file_get_contents('php://input'), true);
-$userId     = (int)($input['userId'] ?? 0);
+$requestedUserId = (int)($input['userId'] ?? 0);
 $sessionId  = (int)($input['sessionId'] ?? 0);
 // $sessionInfo = $input['sessionInfo'] ?? '';
 
-if ($userId <= 0) {
+// korisnik mora biti prijavljen; user id uzimamo iz sessiona, ne iz requesta
+$sessionUserId = (int)($_SESSION['user_id'] ?? 0);
+if ($sessionUserId <= 0) {
     echo json_encode([
         'success' => false,
-        'message' => 'Nedostaje userId.',
+        'message' => 'Nisi prijavljen.',
+    ]);
+    exit;
+}
+
+// Ako frontend pošalje userId, mora odgovarati aktivnom session korisniku
+if ($requestedUserId > 0 && $requestedUserId !== $sessionUserId) {
+    echo json_encode([
+        'success' => false,
+        'message' => 'Neispravan korisnik za rezervaciju.',
     ]);
     exit;
 }
 
 // max 10 rezervacija / 5 minuta po useru
-$rateKey = 'reserve:user:' . $userId;
+$rateKey = 'reserve:user:' . $sessionUserId;
 
 if (!check_rate_limit($pdo, $rateKey, 10, 300)) {
     rate_limit_exceeded_response(
@@ -33,7 +44,7 @@ if (!check_rate_limit($pdo, $rateKey, 10, 300)) {
 // Spremanje rezevracija
 $input = json_decode(file_get_contents('php://input'), true);
 
-$userId      = (int)($input['userId'] ?? 0);
+$userId      = $sessionUserId;
 $sessionId   = isset($input['sessionId']) ? (int)$input['sessionId'] : null;
 $sessionInfo = trim($input['sessionInfo'] ?? '');
 
