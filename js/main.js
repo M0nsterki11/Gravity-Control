@@ -37,7 +37,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 let lastScrollY = window.scrollY;
-let lastShowY = window.scrollY; // gdje je zadnji put header bio vidljiv
+let lastShowY = window.scrollY; 
 
 function setupHeaderScroll() {
   const header = document.querySelector(".main-header");
@@ -45,10 +45,9 @@ function setupHeaderScroll() {
 
   window.addEventListener("scroll", () => {
     const currentY = window.scrollY;
-    const delta = currentY - lastScrollY; // >0 = skrolaš dolje, <0 = gore
+    const delta = currentY - lastScrollY; 
 
     if (Math.abs(delta) < 5) {
-      // premali pomak – ignoriraj
       return;
     }
 
@@ -92,7 +91,7 @@ function showToast(message, type = "info") {
     toast.classList.add("visible");
   });
 
-  // sakrij nakon ... sekunde
+
   setTimeout(() => {
     toast.classList.remove("visible");
   }, 5000);
@@ -324,7 +323,7 @@ function updateAuthUI() {
 
     if (profileBtn) {
       const name = currentUser.full_name || currentUser.email || "Profile";
-      profileBtn.textContent = name.split(" ")[0]; // samo ime
+      profileBtn.textContent = name.split(" ")[0]; 
     }
   } else {
     guestContainer.style.display = "flex";
@@ -387,7 +386,7 @@ function setupParticles() {
     const dt = now - lastTime; // ms
     lastTime = now;
 
-    // ravnomjerni spawn – nema burstova
+    // ravnomjerni spawn particlesa
     spawnAccumulator += dt;
     while (spawnAccumulator >= spawnInterval && particles.length < maxParticles) {
       particles.push(createParticle());
@@ -400,19 +399,19 @@ function setupParticles() {
       const p = particles[i];
       p.life += dt;
 
-      const t = dt / 1000; // sekunde
+      const t = dt / 1000; 
       p.y += p.vy * t;
       p.x += p.vx * t * 0.15;
 
       const lifeRatio = p.life / p.maxLife;
 
-      // izbaci česticu ako je završila život ili došla previsoko (iznad 30% visine)
+      // izbaci česticu ako je završila život ili došla previsoko 
       if (lifeRatio >= 1 || p.y < topLimit) {
         particles.splice(i, 1);
         continue;
       }
 
-      const alpha = (1 - lifeRatio) * 0.9; // fade out
+      const alpha = (1 - lifeRatio) * 0.9; 
 
       ctx.beginPath();
       ctx.fillStyle = `rgba(255, 140, 40, ${alpha})`;

@@ -1,12 +1,11 @@
 <?php
-// backend/config.php
 header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
 header('Pragma: no-cache');
 
 $DB_HOST = 'localhost';
 $DB_NAME = 'gravity_control';
-$DB_USER = 'root';      // promijeni ako treba
-$DB_PASS = '';          // promijeni ako treba
+$DB_USER = 'root';      
+$DB_PASS = '';         
 
 $dsn = "mysql:host=$DB_HOST;dbname=$DB_NAME;charset=utf8mb4";
 

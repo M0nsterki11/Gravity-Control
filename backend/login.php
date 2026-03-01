@@ -43,7 +43,7 @@ $_SESSION['is_admin']  = (int)($user['is_admin'] ?? 0);
 $_SESSION['full_name'] = $user['full_name'];
 $_SESSION['email']     = $user['email'];
 
-// (Za ozbiljnu aplikaciju ovdje bi išli sessioni ili JWT tokeni)
+// Mozda JWT token 
 echo json_encode([
     'success' => true,
     'message' => 'Login uspješan.',

@@ -47,8 +47,7 @@ body {
   z-index: -1;
 }
 
-/* maska koja zatamnjuje lijevu i desnu stranu,
-   pa izgleda kao da je slika uža u sredini */
+
 .bg-overlay::before {
   content: "";
   position: absolute;
@@ -70,7 +69,7 @@ body {
   top: 0;
   bottom: 0;
   left: 50%;
-  width: min(80vw, 1300px); /* širina slike - cca kao tvoje crvene linije */
+  width: min(80vw, 1300px); 
   transform: translateX(-50%);
   background-image:
     linear-gradient(
@@ -81,7 +80,7 @@ body {
     url("../assets/GravityPozadina.jpg");
   background-size: cover;
   background-position: center;
-  opacity: 0.93; /* mrvicu svjetlije nego prije */
+  opacity: 0.93; 
   pointer-events: none;
 }
 
@@ -150,11 +149,11 @@ body::before {
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);  /* centriraj po X i Y unutar headera */
+  transform: translate(-50%, -50%);  
   display: flex;
   justify-content: center;
   margin-left: 0;
-  z-index: 51;  /* malo iznad pozadine headera, ispod modala */
+  z-index: 51;  
 }
 
 .nav-links ul {
@@ -195,7 +194,7 @@ body::before {
   gap: 1.4rem;   
 }
 
-/* Auth buttons */
+
 .auth-buttons .btn {
   font-size: 0.9rem; 
   padding: 0.7rem 1.7rem;
@@ -240,18 +239,18 @@ body::before {
   color: var(--accent);
 }
 
-/* Po defaultu se vidi samo guest (login/register) */
+
 .auth-user {
   display: none;
 }
 
-/* Profile gumb */
+
 .profile-btn {
   text-transform: uppercase;
   letter-spacing: 0.12em;
 }
 
-/* Logout – crven na hover */
+
 .logout-btn:hover {
   border-color: #ff4b4b;
   background: #a31a1a;
@@ -291,7 +290,7 @@ body::before {
   box-shadow: 0 0 18px rgba(255, 75, 75, 0.6);
 }
 
-/* Burger button */
+
 .nav-toggle {
   display: none;
   flex-direction: column;
@@ -323,7 +322,7 @@ body::before {
   transform: translateY(-6px) rotate(-45deg);
 }
 
-/* Buttons */
+
 .btn {
   font-family: inherit;
   font-size: 0.85rem;
@@ -373,7 +372,7 @@ body::before {
   width: 100%;
 }
 
-/* Hero */
+
 .hero-section {
   min-height: calc(100vh - 64px);
   display: flex;
@@ -478,16 +477,16 @@ body::before {
   border: 1px solid var(--border-subtle);
   box-shadow: var(--shadow-strong);
   overflow: hidden;
-  max-width: 1600px;      /* po želji, širina boxa */
-  margin-inline: auto;    /* centriraj */
-  aspect-ratio: 16 / 9;   /* uvijek 16:9 */
+  max-width: 1600px;      
+  margin-inline: auto;    
+  aspect-ratio: 16 / 9;   
 }
 
 .video-placeholder video {
   width: 100%;
   height: 100%;
   display: block;
-  object-fit: cover;      /* da ispuni cijeli okvir bez rupa */
+  object-fit: cover;      
 }
 
 .video-dummy-text {
@@ -595,7 +594,7 @@ body::before {
 .trainer-content p {
   margin: 0;
   font-size: 0.93rem;
-  line-height: 1.55;     /* puno čitljivije */
+  line-height: 1.55;     
 }
 /* Gallery */
 .gallery-grid {
@@ -639,15 +638,7 @@ body::before {
   opacity: 1;
 }
 
-/*
-  /* Location 
-.location-content {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 1.5rem;
-  align-items: stretch;
-}
-*/
+
 .location-info {
   background: rgba(10, 10, 10, 0.92);
   border-radius: var(--radius-lg);
@@ -741,7 +732,7 @@ body::before {
 }
 
 .footer-ig-link i {
-  font-size: 2.4rem;      /* VEĆI INSTAGRAM LOGO */
+  font-size: 2.4rem;      
   color: var(--accent);
   transition: transform 0.15s ease-out, color 0.15s ease-out;
 }
@@ -893,7 +884,7 @@ body::before {
   display: none;
   align-items: center;
   justify-content: center;
-  z-index: 90; /* iznad svega ostalog */
+  z-index: 90; 
 }
 
 /* kad je otvoren */
@@ -901,10 +892,10 @@ body::before {
   display: flex;
 }
 
-/* blok sa slikom */
+
 .image-lightbox-content {
   position: relative;
-  max-width: 480px;      /* ➜ koliko široko želiš da ide (probaj 420–520) */
+  max-width: 480px;      
   width: auto;
   max-height: 80vh;
   border-radius: 18px;
@@ -912,16 +903,16 @@ body::before {
   box-shadow: var(--shadow-strong);
 }
 
-/* sama slika */
+
 .image-lightbox-content img {
   display: block;
-  width: 100%;           /* uvijek popuni tih max 480px */
-  height: auto;          /* čuva omjer stranica, vertikalne ostaju vertikalne */
+  width: 100%;           
+  height: auto;          
   object-fit: contain;
 }
 
 
-/* X gumb za zatvaranje */
+
 .image-lightbox-close {
   position: absolute;
   top: 0.5rem;
@@ -934,12 +925,12 @@ body::before {
   text-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
 }
 
-/* kad je lightbox otvoren, zabrani scroll pozadine */
+
 body.no-scroll {
   overflow: hidden;
 }
 
-/* kursor na malim slikama */
+
 .lightbox-image {
   cursor: zoom-in;
 }
@@ -972,8 +963,8 @@ body.no-scroll {
   grid-template-columns: 1fr;
   gap: 1.5rem;
   align-items: stretch;
-  max-width: 1100px;   /* širina cijelog bloka Lokacija */
-  margin: 0 auto;      /* centriraj u sredinu stranice */
+  max-width: 1100px;   
+  margin: 0 auto;      
 }
 
   .gallery-grid {
@@ -1063,7 +1054,7 @@ body.no-scroll {
   }
 
   .auth-buttons {
-    display: none; /* za mobitel se user logira preko hero CTA ili burger menija, možeš po želji mijenjati */
+    display: none; 
   }
 
   .nav-toggle {
@@ -1077,7 +1068,7 @@ body.no-scroll {
   }
 
   .header-social {
-    display: none;   /* da ne guši header na mobitelu */
+    display: none;   
   }
 
   .hero-section {
@@ -1096,9 +1087,9 @@ body.no-scroll {
     margin-right: auto;
   }
 
-  /* gumbi jedan ispod drugog, poravnati u sredinu */
+  
   .hero-cta {
-    align-items: center; /* već imaš flex-direction: column u starom @media, ovo ga samo centrira */
+    align-items: center; 
   }
 
   /* hashtagovi u sredinu */
@@ -1111,16 +1102,16 @@ body.no-scroll {
   }
 
   .schedule-table {
-    min-width: 0;          /* makni onih 520px */
+    min-width: 0;          
     width: 100%;
-    table-layout: fixed;   /* stupci se stisnu koliko treba */
+    table-layout: fixed;   
   }
 
   .schedule-table th,
   .schedule-table td {
     padding: 0.55rem 0.4rem;
     font-size: 0.75rem;
-    word-break: break-word;  /* neka lomi tekst umjesto da širi tablicu */
+    word-break: break-word;  
   }
 }
 

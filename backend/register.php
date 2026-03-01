@@ -18,7 +18,7 @@ if (!check_rate_limit($pdo, $rateKey, 5, 600)) {
     );
 }
 
-// Pročitaj JSON body
+// Čita JSON body
 $input = json_decode(file_get_contents('php://input'), true);
 
 $fullName = trim($input['fullName'] ?? '');
@@ -46,7 +46,7 @@ if (strlen($password) < 6) {
     exit;
 }
 
-// Provjeri je li email već zauzet
+// Provjeri jel email već zauzet
 $stmt = $pdo->prepare('SELECT id FROM users WHERE email = ? LIMIT 1');
 $stmt->execute([$email]);
 $existing = $stmt->fetch();

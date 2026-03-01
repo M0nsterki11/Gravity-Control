@@ -1,13 +1,12 @@
 <?php
-// backend/admin_reservations.php
-
+// user_id i is_admin.
 session_start();
 require __DIR__ . '/config.php';
 
 header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
 header('Pragma: no-cache');
 
-// ako korisnik nije logiran ili nije admin → van
+// Provjeri admina
 $isAdmin = isset($_SESSION['is_admin']) ? (int)$_SESSION['is_admin'] : 0;
 
 if (empty($_SESSION['user_id']) || $isAdmin !== 1) {
@@ -16,6 +15,7 @@ if (empty($_SESSION['user_id']) || $isAdmin !== 1) {
     exit;
 }
 
+// SQL za admin
 $sql = "
     SELECT
         r.id,
@@ -39,7 +39,6 @@ $reservations = $stmt->fetchAll();
 
 function formatSessionRow(array $row): string
 {
-    // Ako postoji povezani session iz tablice sessions
     if (!empty($row['day']) && !empty($row['time_from']) && !empty($row['time_to'])) {
         $timeFrom = substr($row['time_from'], 0, 5);
         $timeTo   = substr($row['time_to'], 0, 5);
@@ -64,8 +63,6 @@ function formatSessionRow(array $row): string
 
         return $label;
     }
-
-    // Fallback – tekst iz session_info
     return $row['session_info'] ?: 'N/A';
 }
 
