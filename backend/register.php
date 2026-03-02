@@ -2,11 +2,13 @@
 session_start();
 require __DIR__ . '/config.php';
 require __DIR__ . '/rate_limit.php';
+require __DIR__ . '/security.php';
 
 header('Content-Type: application/json; charset=utf-8');
 header('Access-Control-Allow-Origin: *');
 header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
 header('Pragma: no-cache');
+require_http_method('POST');
 
 // max 5 registracija u 10 minuta po IP
 $ip = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
@@ -64,6 +66,13 @@ $stmt->execute([$fullName, $email, $hash]);
 
 $userId = $pdo->lastInsertId();
 
+session_regenerate_id(true);
+$_SESSION['user_id'] = (int)$userId;
+$_SESSION['is_admin'] = 0;
+$_SESSION['full_name'] = $fullName;
+$_SESSION['email'] = $email;
+$csrfToken = issue_csrf_token();
+
 echo json_encode([
     'success' => true,
     'message' => 'Registracija uspješna.',
@@ -71,5 +80,7 @@ echo json_encode([
         'id'        => (int)$userId,
         'full_name' => $fullName,
         'email'     => $email,
+        'is_admin'  => 0,
+        'csrf_token' => $csrfToken,
     ],
 ]);

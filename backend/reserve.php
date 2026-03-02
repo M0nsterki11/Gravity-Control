@@ -2,11 +2,13 @@
 session_start();
 require __DIR__ . '/config.php';
 require __DIR__ . '/rate_limit.php';
+require __DIR__ . '/security.php';
 
 header('Content-Type: application/json; charset=utf-8');
 header('Access-Control-Allow-Origin: *');
 header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
 header('Pragma: no-cache');
+require_http_method('POST');
 
 $input = json_decode(file_get_contents('php://input'), true);
 $requestedUserId = (int)($input['userId'] ?? 0);
@@ -22,6 +24,8 @@ if ($sessionUserId <= 0) {
     ]);
     exit;
 }
+
+require_valid_csrf_token();
 
 // Ako frontend pošalje userId, mora odgovarati aktivnom session korisniku
 if ($requestedUserId > 0 && $requestedUserId !== $sessionUserId) {
@@ -42,8 +46,6 @@ if (!check_rate_limit($pdo, $rateKey, 10, 300)) {
 }
 
 // Spremanje rezevracija
-$input = json_decode(file_get_contents('php://input'), true);
-
 $userId      = $sessionUserId;
 $sessionId   = isset($input['sessionId']) ? (int)$input['sessionId'] : null;
 $sessionInfo = trim($input['sessionInfo'] ?? '');

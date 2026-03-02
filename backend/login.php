@@ -2,11 +2,13 @@
 session_start();
 require __DIR__ . '/config.php';
 require __DIR__ . '/rate_limit.php';
+require __DIR__ . '/security.php';
 
 header('Content-Type: application/json; charset=utf-8');
 header('Access-Control-Allow-Origin: *');
 header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
 header('Pragma: no-cache');
+require_http_method('POST');
 
 // rate limit: max 10 pokušaja / 1 min po IP-u
 $ip = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
@@ -38,10 +40,12 @@ if (!$user || !password_verify($password, $user['password_hash'])) {
     exit;
 }
 
+session_regenerate_id(true);
 $_SESSION['user_id']   = (int)$user['id'];
 $_SESSION['is_admin']  = (int)($user['is_admin'] ?? 0);
 $_SESSION['full_name'] = $user['full_name'];
 $_SESSION['email']     = $user['email'];
+$csrfToken = issue_csrf_token();
 
 // Mozda JWT token 
 echo json_encode([
@@ -52,5 +56,6 @@ echo json_encode([
         'full_name' => $user['full_name'],
         'email'     => $user['email'],
         'is_admin'  => (int)($user['is_admin'] ?? 0),
+        'csrf_token' => $csrfToken,
     ],
 ]);

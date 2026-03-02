@@ -97,6 +97,19 @@ function showToast(message, type = "info") {
   }, 5000);
 }
 
+function clearLocalAuthState() {
+  currentUser = null;
+  localStorage.removeItem("gravityUser");
+  updateAuthUI();
+}
+
+function getCsrfToken() {
+  if (!currentUser || typeof currentUser.csrf_token !== "string") {
+    return "";
+  }
+  return currentUser.csrf_token.trim();
+}
+
 /* ---------- Nav ---------- */
 
 function setupNav() {
@@ -186,6 +199,14 @@ function setupAuthModal() {
       }
 
       currentUser = data.user;
+      if (typeof data.csrf_token === "string" && currentUser && !currentUser.csrf_token) {
+        currentUser.csrf_token = data.csrf_token;
+      }
+      if (!getCsrfToken()) {
+        clearLocalAuthState();
+        showToast("Sigurnosna sesija nije valjana. Prijavi se ponovno.", "error");
+        return;
+      }
       localStorage.setItem("gravityUser", JSON.stringify(currentUser));
       updateAuthUI();
       showToast("Prijavljen si kao: " + currentUser.full_name, "success");
@@ -223,6 +244,14 @@ function setupAuthModal() {
       }
 
       currentUser = data.user;
+      if (typeof data.csrf_token === "string" && currentUser && !currentUser.csrf_token) {
+        currentUser.csrf_token = data.csrf_token;
+      }
+      if (!getCsrfToken()) {
+        clearLocalAuthState();
+        showToast("Sigurnosna sesija nije valjana. Prijavi se ponovno.", "error");
+        return;
+      }
       localStorage.setItem("gravityUser", JSON.stringify(currentUser));
       updateAuthUI();
       showToast("Registracija uspješna. Prijavljen si kao: " + currentUser.full_name, "success");
@@ -285,25 +314,38 @@ function setupProfileAndLogout() {
 
   if (logoutBtn) {
     logoutBtn.addEventListener("click", async () => {
+      const csrfToken = getCsrfToken();
+      if (!csrfToken) {
+        clearLocalAuthState();
+        showToast("Sesija je istekla. Prijavi se ponovno.", "error");
+        return;
+      }
+
       try {
         const res = await fetch("backend/logout.php", {
           method: "POST",
           headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            "X-CSRF-Token": csrfToken
           }
         });
 
         const data = await res.json();
 
-        currentUser = null;
-        localStorage.removeItem("gravityUser");
-        updateAuthUI();
+        if (!data.success) {
+          const message = data.message || "Greska kod odjave.";
+          if (/csrf|prijavljen/i.test(message)) {
+            clearLocalAuthState();
+          }
+          showToast(message, "error");
+          return;
+        }
+
+        clearLocalAuthState();
         showToast(data.message || "Uspješno si se odjavio.", "success");
       } catch (err) {
         console.error(err);
-        currentUser = null;
-        localStorage.removeItem("gravityUser");
-        updateAuthUI();
+        clearLocalAuthState();
         showToast("Odjava lokalno završena, ali server logout nije uspio.", "error");
       }
     });
@@ -446,24 +488,39 @@ async function populateSchedule() {
     sessions.forEach((session) => {
       const tr = document.createElement("tr");
 
-      const timeLabel = `${session.time_from.slice(0, 5)} - ${session.time_to.slice(0, 5)}`;
-      const sessionLabel = `${session.day} ${timeLabel}`;
+      const day = session.day ?? "";
+      const type = session.type ?? "";
+      const coach = session.coach ?? "";
+      const timeFrom = typeof session.time_from === "string" ? session.time_from.slice(0, 5) : "";
+      const timeTo = typeof session.time_to === "string" ? session.time_to.slice(0, 5) : "";
+      const timeLabel = `${timeFrom} - ${timeTo}`;
+      const sessionLabel = `${day} ${timeLabel}`;
 
-      tr.innerHTML = `
-        <td>${session.day}</td>
-        <td>${timeLabel}</td>
-        <td>${session.type}</td>
-        <td>${session.coach}</td>
-        <td>
-          <button 
-            class="btn btn-outline btn-small" 
-            data-session="${sessionLabel}"
-            data-session-id="${session.id}"
-          >
-            Rezerviraj
-          </button>
-        </td>
-      `;
+      const tdDay = document.createElement("td");
+      tdDay.textContent = day;
+      tr.appendChild(tdDay);
+
+      const tdTime = document.createElement("td");
+      tdTime.textContent = timeLabel;
+      tr.appendChild(tdTime);
+
+      const tdType = document.createElement("td");
+      tdType.textContent = type;
+      tr.appendChild(tdType);
+
+      const tdCoach = document.createElement("td");
+      tdCoach.textContent = coach;
+      tr.appendChild(tdCoach);
+
+      const tdAction = document.createElement("td");
+      const reserveBtn = document.createElement("button");
+      reserveBtn.type = "button";
+      reserveBtn.className = "btn btn-outline btn-small";
+      reserveBtn.dataset.session = sessionLabel;
+      reserveBtn.dataset.sessionId = String(session.id ?? "");
+      reserveBtn.textContent = "Rezerviraj";
+      tdAction.appendChild(reserveBtn);
+      tr.appendChild(tdAction);
 
       scheduleBody.appendChild(tr);
     });
@@ -481,12 +538,22 @@ async function populateSchedule() {
 
         const sessionInfo = target.getAttribute("data-session");
         const sessionId = parseInt(target.getAttribute("data-session-id"), 10) || null;
+        const csrfToken = getCsrfToken();
+
+        if (!csrfToken) {
+          clearLocalAuthState();
+          showToast("Sesija je istekla. Prijavi se ponovno.", "error");
+          const loginBtn = document.getElementById("login-btn");
+          loginBtn?.click();
+          return;
+        }
 
         try {
           const res = await fetch("backend/reserve.php", {
             method: "POST",
             headers: {
-              "Content-Type": "application/json"
+              "Content-Type": "application/json",
+              "X-CSRF-Token": csrfToken
             },
             body: JSON.stringify({
               sessionId,
@@ -497,7 +564,13 @@ async function populateSchedule() {
           const data = await res.json();
 
           if (!data.success) {
-            showToast(data.message || "Greška kod rezervacije.", "error");
+            const message = data.message || "Greska kod rezervacije.";
+            if (/csrf|prijavljen/i.test(message)) {
+              clearLocalAuthState();
+              const loginBtn = document.getElementById("login-btn");
+              loginBtn?.click();
+            }
+            showToast(message, "error");
             return;
           }
 
