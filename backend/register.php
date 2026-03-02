@@ -61,8 +61,17 @@ if ($existing) {
 // Spremi usera
 $hash = password_hash($password, PASSWORD_DEFAULT);
 
-$stmt = $pdo->prepare('INSERT INTO users (full_name, email, password_hash) VALUES (?, ?, ?)');
-$stmt->execute([$fullName, $email, $hash]);
+try {
+    $stmt = $pdo->prepare('INSERT INTO users (full_name, email, password_hash) VALUES (?, ?, ?)');
+    $stmt->execute([$fullName, $email, $hash]);
+} catch (PDOException $e) {
+    // Ako postoji UNIQUE indeks na users.email, ovdje hvatamo race condition
+    if ((string)$e->getCode() === '23000') {
+        echo json_encode(['success' => false, 'message' => 'Korisnik s tim emailom vec postoji.']);
+        exit;
+    }
+    throw $e;
+}
 
 $userId = $pdo->lastInsertId();
 

@@ -12,8 +12,7 @@ require_http_method('POST');
 
 $input = json_decode(file_get_contents('php://input'), true);
 $requestedUserId = (int)($input['userId'] ?? 0);
-$sessionId  = (int)($input['sessionId'] ?? 0);
-// $sessionInfo = $input['sessionInfo'] ?? '';
+$sessionId = isset($input['sessionId']) ? (int)$input['sessionId'] : 0;
 
 // korisnik mora biti prijavljen; user id uzimamo iz sessiona, ne iz requesta
 $sessionUserId = (int)($_SESSION['user_id'] ?? 0);
@@ -45,12 +44,9 @@ if (!check_rate_limit($pdo, $rateKey, 10, 300)) {
     );
 }
 
-// Spremanje rezevracija
-$userId      = $sessionUserId;
-$sessionId   = isset($input['sessionId']) ? (int)$input['sessionId'] : null;
-$sessionInfo = trim($input['sessionInfo'] ?? '');
-
-if ($userId <= 0 || ($sessionId === null && $sessionInfo === '')) {
+// Spremanje rezervacija
+$userId = $sessionUserId;
+if ($userId <= 0 || $sessionId <= 0) {
     echo json_encode(['success' => false, 'message' => 'Nedostaju podaci za rezervaciju.']);
     exit;
 }
@@ -65,41 +61,55 @@ if (!$user) {
     exit;
 }
 
-// Ako imamo sessionId, povuci standardizirani opis termina
-if ($sessionId !== null) {
-    $stmt = $pdo->prepare('SELECT day, time_from, time_to, type, coach FROM sessions WHERE id = ? AND active = 1');
-    $stmt->execute([$sessionId]);
-    $sessionRow = $stmt->fetch(PDO::FETCH_ASSOC);
+// Dohvati standardizirani opis termina
+$stmt = $pdo->prepare('SELECT day, time_from, time_to, type, coach FROM sessions WHERE id = ? AND active = 1');
+$stmt->execute([$sessionId]);
+$sessionRow = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    if (!$sessionRow) {
-        echo json_encode(['success' => false, 'message' => 'Termin ne postoji ili nije aktivan.']);
-        exit;
-    }
-
-    $timeFrom = substr($sessionRow['time_from'], 0, 5); // "18:00"
-    $timeTo   = substr($sessionRow['time_to'], 0, 5);   // "19:30"
-
-    $sessionInfo = sprintf(
-        '%s %s - %s (%s, %s)',
-        $sessionRow['day'],
-        $timeFrom,
-        $timeTo,
-        $sessionRow['type'],
-        $sessionRow['coach']
-    );
+if (!$sessionRow) {
+    echo json_encode(['success' => false, 'message' => 'Termin ne postoji ili nije aktivan.']);
+    exit;
 }
 
-// Spremi rezervaciju
-if ($sessionId !== null) {
-    $stmt = $pdo->prepare('
-        INSERT INTO reservations (user_id, session_id, session_info) 
-        VALUES (?, ?, ?)
-    ');
+$timeFrom = substr($sessionRow['time_from'], 0, 5); // "18:00"
+$timeTo   = substr($sessionRow['time_to'], 0, 5);   // "19:30"
+$sessionInfo = sprintf(
+    '%s %s - %s (%s, %s)',
+    $sessionRow['day'],
+    $timeFrom,
+    $timeTo,
+    $sessionRow['type'],
+    $sessionRow['coach']
+);
+
+// Nemoj dozvoliti istom useru duplu rezervaciju istog termina
+$stmt = $pdo->prepare('SELECT id FROM reservations WHERE user_id = ? AND session_id = ? LIMIT 1');
+$stmt->execute([$userId, $sessionId]);
+$existingReservation = $stmt->fetch();
+if ($existingReservation) {
+    echo json_encode([
+        'success' => false,
+        'message' => 'Vec imas rezervaciju za taj termin.',
+    ]);
+    exit;
+}
+
+// Spremi rezervaciju 
+$stmt = $pdo->prepare('
+    INSERT INTO reservations (user_id, session_id, session_info) 
+    VALUES (?, ?, ?)
+');
+try {
     $stmt->execute([$userId, $sessionId, $sessionInfo]);
-} else {
-    // fallback ako iz nekog razloga nema sessionId (stariji frontend itd.)
-    $stmt = $pdo->prepare('INSERT INTO reservations (user_id, session_info) VALUES (?, ?)');
-    $stmt->execute([$userId, $sessionInfo]);
+} catch (PDOException $e) {
+    if ((string)$e->getCode() === '23000') {
+        echo json_encode([
+            'success' => false,
+            'message' => 'Vec imas rezervaciju za taj termin.',
+        ]);
+        exit;
+    }
+    throw $e;
 }
 
 echo json_encode([
