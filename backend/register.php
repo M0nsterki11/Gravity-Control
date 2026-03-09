@@ -1,5 +1,5 @@
 <?php
-session_start();
+  session_start();
 require __DIR__ . '/config.php';
 require __DIR__ . '/rate_limit.php';
 require __DIR__ . '/security.php';

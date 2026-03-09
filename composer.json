@@ -1,0 +1,21 @@
+{
+  "name": "gravity-control/app",
+  "description": "Gravity Control web app",
+  "type": "project",
+  "require": {
+    "php": ">=8.1"
+  },
+  "require-dev": {
+    "phpstan/phpstan": "^1.11",
+    "squizlabs/php_codesniffer": "^3.10"
+  },
+  "autoload": {
+    "psr-4": {
+      "App\\": "src/"
+    }
+  },
+  "scripts": {
+    "lint:php": "phpcs --standard=phpcs.xml src backend",
+    "analyse": "phpstan analyse"
+  }
+}

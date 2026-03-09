@@ -63,7 +63,7 @@ body {
 }
 
 /* centralni “stup” sa slikom */
-.bg-overlay::before {
+.bg-overlay::after {
   content: "";
   position: absolute;
   top: 0;
@@ -639,6 +639,7 @@ body::before {
 }
 
 
+/* Location */
 .location-info {
   background: rgba(10, 10, 10, 0.92);
   border-radius: var(--radius-lg);

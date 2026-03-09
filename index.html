@@ -18,7 +18,7 @@
   <link rel="stylesheet" href="css/main.css?v=1.4"> 
 
   <!-- JS -->
-  <script src="js/main.js?v=1"></script>
+  <script type="module" src="js/main.js?v=2"></script>
 
 </head>
 <body>
@@ -71,8 +71,8 @@
         </a>
       </div>
 
-    <div class="auth-buttons" id="auth-buttons">
-    <!-- Guest state: Login / Register -->
+      <div class="auth-buttons" id="auth-buttons">
+      <!-- Guest state: Login / Register -->
       <div class="auth-guest" id="auth-guest">
         <button class="btn btn-outline" id="login-btn">Login</button>
         <button class="btn btn-primary" id="register-btn">Register</button>
@@ -82,6 +82,7 @@
       <div class="auth-user" id="auth-user">
         <button class="btn btn-outline profile-btn" id="profile-btn">Profile</button>
         <button class="btn btn-outline logout-btn" id="logout-btn">Logout</button>
+      </div>
       </div>
     </div>
   </header>
@@ -383,7 +384,7 @@
     <div class="footer-phrase">
       <span>Hard work pays off.</span>
     </div>
-    <div class="footer-phrase2"></div>
+    <div class="footer-phrase2">
       <span>No pain, no gain.</span>
     </div>
   </div>
