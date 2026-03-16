@@ -14,6 +14,7 @@ use Throwable;
 
 final class AuthController
 {
+    // Login endpoint: rate limit, validacija ulaza i izdavanje session podataka.
     public static function login(PDO $pdo): void
     {
         self::jsonHeaders(true);
@@ -47,6 +48,7 @@ final class AuthController
         }
     }
 
+    // Register endpoint: rate limit, validacija ulaza i kreiranje korisnika.
     public static function register(PDO $pdo): void
     {
         self::jsonHeaders(true);
@@ -82,6 +84,7 @@ final class AuthController
         }
     }
 
+    // Logout endpoint: odjava korisnika uz CSRF provjeru.
     public static function logout(PDO $pdo): void
     {
         unset($pdo);
@@ -102,6 +105,7 @@ final class AuthController
         }
     }
 
+    // Postavlja standardna JSON/no-cache zaglavlja za auth odgovore.
     private static function jsonHeaders(bool $allowCors): void
     {
         header('Content-Type: application/json; charset=utf-8');

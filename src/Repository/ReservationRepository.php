@@ -10,6 +10,7 @@ final class ReservationRepository
     {
     }
 
+    // Provjera ima li korisnik vec rezervaciju za termin.
     public function existsForUserSession(int $userId, int $sessionId): bool
     {
         $stmt = $this->pdo->prepare('SELECT id FROM reservations WHERE user_id = ? AND session_id = ? LIMIT 1');
@@ -18,6 +19,7 @@ final class ReservationRepository
         return (bool)$stmt->fetch();
     }
 
+    // Sprema novu rezervaciju u bazu.
     public function create(int $userId, int $sessionId, string $sessionInfo): void
     {
         $stmt = $this->pdo->prepare(

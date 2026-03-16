@@ -1,9 +1,11 @@
 <?php
 
+// Pokrece session ako nije vec aktivna.
 if (session_status() !== PHP_SESSION_ACTIVE) {
     session_start();
 }
 
+// PSR-4 autoload za App namespace.
 spl_autoload_register(static function (string $class): void {
     $prefix = 'App\\';
     if (strncmp($class, $prefix, strlen($prefix)) !== 0) {
@@ -17,6 +19,7 @@ spl_autoload_register(static function (string $class): void {
     }
 });
 
+// Ucitava legacy helper fajlove i vraca PDO konekciju.
 require_once __DIR__ . '/../backend/config.php';
 require_once __DIR__ . '/../backend/rate_limit.php';
 require_once __DIR__ . '/../backend/security.php';

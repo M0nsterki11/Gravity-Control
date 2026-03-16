@@ -10,6 +10,7 @@ final class SessionRepository
     {
     }
 
+    // Dohvaca jedan aktivan termin po ID-u.
     public function findActiveById(int $sessionId): ?array
     {
         $stmt = $this->pdo->prepare(
@@ -21,6 +22,7 @@ final class SessionRepository
         return is_array($row) ? $row : null;
     }
 
+    // Vraca sve aktivne termine sortirane po danu i vremenu.
     public function listActive(): array
     {
         $sql = "

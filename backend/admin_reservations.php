@@ -1,12 +1,12 @@
 <?php
-// user_id i is_admin.
+// Pokrece session i ucitava PDO konekciju.
 session_start();
 require __DIR__ . '/config.php';
 
 header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
 header('Pragma: no-cache');
 
-// Provjeri admina
+// Dozvoljava pristup samo admin korisniku.
 $isAdmin = isset($_SESSION['is_admin']) ? (int)$_SESSION['is_admin'] : 0;
 
 if (empty($_SESSION['user_id']) || $isAdmin !== 1) {
@@ -15,7 +15,7 @@ if (empty($_SESSION['user_id']) || $isAdmin !== 1) {
     exit;
 }
 
-// SQL za admin
+// Dohvaca rezervacije zajedno s korisnikom i podacima termina.
 $sql = "
     SELECT
         r.id,
@@ -39,6 +39,7 @@ $reservations = $stmt->fetchAll();
 
 function formatSessionRow(array $row): string
 {
+    // Prioritetno formatira naziv iz sessions tablice (ako postoji).
     if (!empty($row['day']) && !empty($row['time_from']) && !empty($row['time_to'])) {
         $timeFrom = substr($row['time_from'], 0, 5);
         $timeTo   = substr($row['time_to'], 0, 5);
@@ -63,6 +64,7 @@ function formatSessionRow(array $row): string
 
         return $label;
     }
+    // Fallback na snapshot tekst sacuvan u reservations.session_info.
     return $row['session_info'] ?: 'N/A';
 }
 

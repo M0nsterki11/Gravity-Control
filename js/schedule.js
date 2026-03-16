@@ -2,6 +2,7 @@ import { getSessionsRequest, reserveRequest } from "./api.js";
 import { clearStoredUser, getCsrfToken, getCurrentUser } from "./state/session.js";
 import { showToast } from "./ui/toast.js";
 
+// Dohvaca termine, iscrtava tablicu i obraduje klik na rezervaciju.
 export async function populateSchedule({ onRequireLogin, onSessionInvalid } = {}) {
   const scheduleBody = document.getElementById("schedule-body");
   if (!scheduleBody) return;
@@ -56,6 +57,7 @@ export async function populateSchedule({ onRequireLogin, onSessionInvalid } = {}
       scheduleBody.appendChild(tr);
     });
 
+    // Delegirani handler za rezervaciju termina iz tablice.
     scheduleBody.addEventListener("click", async (event) => {
       const target = event.target;
       if (!(target instanceof Element) || !target.matches("button[data-session]")) {

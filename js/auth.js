@@ -6,24 +6,29 @@ import { showToast } from "./ui/toast.js";
 let authModalEl = null;
 let switchTab = () => {};
 
+// Otvara auth modal direktno na login tabu.
 export function openLoginModal() {
   openAuthModal("login-form");
 }
 
+// Otvara auth modal direktno na register tabu.
 export function openRegisterModal() {
   openAuthModal("register-form");
 }
 
+// Centralna funkcija za otvaranje modala i odabir aktivnog taba.
 export function openAuthModal(defaultTab = "register-form") {
   if (!authModalEl) return;
   openModal(authModalEl);
   switchTab(defaultTab);
 }
 
+// Zatvara auth modal.
 function closeAuthModal() {
   closeModal(authModalEl);
 }
 
+// Sinkronizira prikaz guest/user sekcija prema stanju prijave.
 export function updateAuthUI() {
   const guestContainer = document.getElementById("auth-guest");
   const userContainer = document.getElementById("auth-user");
@@ -48,11 +53,13 @@ export function updateAuthUI() {
   }
 }
 
+// Cisti lokalni auth state i osvjezava auth UI.
 export function clearLocalAuthState() {
   clearStoredUser();
   updateAuthUI();
 }
 
+// Veze event listenere za login/register forme i auth modal akcije.
 export function setupAuthModal() {
   authModalEl = document.getElementById("auth-modal");
   const loginBtn = document.getElementById("login-btn");
@@ -134,6 +141,7 @@ export function setupAuthModal() {
   });
 }
 
+// Toggle prikaza lozinke za sva polja koja imaju data-target.
 export function setupPasswordToggles() {
   const toggles = document.querySelectorAll(".password-toggle");
 
@@ -155,6 +163,7 @@ export function setupPasswordToggles() {
   });
 }
 
+// Postavlja profile klik i logout flow s CSRF provjerom.
 export function setupProfileAndLogout() {
   const profileBtn = document.getElementById("profile-btn");
   const logoutBtn = document.getElementById("logout-btn");

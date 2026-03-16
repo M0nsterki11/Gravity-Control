@@ -11,6 +11,7 @@ use Throwable;
 
 final class SessionController
 {
+    // Endpoint koji vraca listu aktivnih termina za raspored.
     public static function list(PDO $pdo): void
     {
         header('Content-Type: application/json; charset=utf-8');

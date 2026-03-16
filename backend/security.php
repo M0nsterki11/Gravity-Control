@@ -1,5 +1,6 @@
 <?php
 
+// Standardizirani JSON error response i prekid izvrsavanja.
 function json_error_response(int $statusCode, string $message): void
 {
     http_response_code($statusCode);
@@ -10,6 +11,7 @@ function json_error_response(int $statusCode, string $message): void
     exit;
 }
 
+// Blokira zahtjev ako HTTP metoda nije ona koju endpoint ocekuje.
 function require_http_method(string $method): void
 {
     $requestMethod = strtoupper($_SERVER['REQUEST_METHOD'] ?? '');
@@ -21,6 +23,7 @@ function require_http_method(string $method): void
     }
 }
 
+// Kreira i vraca CSRF token iz sessiona.
 function issue_csrf_token(): string
 {
     if (empty($_SESSION['csrf_token']) || !is_string($_SESSION['csrf_token'])) {
@@ -30,6 +33,7 @@ function issue_csrf_token(): string
     return $_SESSION['csrf_token'];
 }
 
+// Provjerava CSRF token iz zaglavlja protiv tokena u sessionu.
 function require_valid_csrf_token(): void
 {
     $sessionToken = $_SESSION['csrf_token'] ?? '';

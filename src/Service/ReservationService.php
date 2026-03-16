@@ -17,6 +17,7 @@ final class ReservationService
     ) {
     }
 
+    // Validira korisnika i termin te sprema novu rezervaciju.
     public function reserve(int $sessionUserId, int $requestedUserId, int $sessionId): void
     {
         if ($requestedUserId > 0 && $requestedUserId !== $sessionUserId) {

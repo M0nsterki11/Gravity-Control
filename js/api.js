@@ -1,3 +1,4 @@
+// Zajednicki fetch helper za JSON request/response i opcionalni CSRF header.
 async function requestJson(url, { method = "GET", body, csrfToken = "" } = {}) {
   const headers = {};
   if (body !== undefined) {
@@ -17,6 +18,7 @@ async function requestJson(url, { method = "GET", body, csrfToken = "" } = {}) {
   return { response, data };
 }
 
+// Poziva backend login endpoint.
 export async function loginRequest(email, password) {
   const { data } = await requestJson("backend/login.php", {
     method: "POST",
@@ -25,6 +27,7 @@ export async function loginRequest(email, password) {
   return data;
 }
 
+// Poziva backend register endpoint.
 export async function registerRequest(fullName, email, password, confirmPassword) {
   const { data } = await requestJson("backend/register.php", {
     method: "POST",
@@ -33,6 +36,7 @@ export async function registerRequest(fullName, email, password, confirmPassword
   return data;
 }
 
+// Poziva backend logout endpoint uz CSRF token.
 export async function logoutRequest(csrfToken) {
   const { data } = await requestJson("backend/logout.php", {
     method: "POST",
@@ -41,11 +45,13 @@ export async function logoutRequest(csrfToken) {
   return data;
 }
 
+// Dohvaca aktivne termine za raspored.
 export async function getSessionsRequest() {
   const { data } = await requestJson("backend/get_sessions.php");
   return data;
 }
 
+// Salje rezervaciju odabranog termina korisniku.
 export async function reserveRequest(sessionId, sessionInfo, csrfToken) {
   const { data } = await requestJson("backend/reserve.php", {
     method: "POST",

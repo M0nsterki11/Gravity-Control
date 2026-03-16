@@ -1,3 +1,4 @@
+// Prikazuje kratku toast poruku i automatski je skriva nakon timeouta.
 export function showToast(message, type = "info") {
   const toast = document.getElementById("toast");
   if (!toast) return;

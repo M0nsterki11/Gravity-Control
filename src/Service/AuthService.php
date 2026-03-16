@@ -12,6 +12,7 @@ final class AuthService
     {
     }
 
+    // Obraduje login: validacija kredencijala, session i CSRF token.
     public function login(string $email, string $password): array
     {
         if ($this->users === null) {
@@ -43,6 +44,7 @@ final class AuthService
         ];
     }
 
+    // Obraduje registraciju: validacija podataka, insert korisnika i session.
     public function register(string $fullName, string $email, string $password, string $confirmPassword): array
     {
         if ($this->users === null) {
@@ -96,6 +98,7 @@ final class AuthService
         ];
     }
 
+    // Gasi prijavljenu sesiju i po potrebi trazi vazeci CSRF token.
     public function logout(bool $validateCsrfIfLoggedIn = true): void
     {
         if ($validateCsrfIfLoggedIn && !empty($_SESSION['user_id'])) {

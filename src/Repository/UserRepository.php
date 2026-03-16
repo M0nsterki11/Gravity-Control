@@ -10,6 +10,7 @@ final class UserRepository
     {
     }
 
+    // Vraca korisnika po emailu ili null ako ne postoji.
     public function findByEmail(string $email): ?array
     {
         $stmt = $this->pdo->prepare(
@@ -21,6 +22,7 @@ final class UserRepository
         return is_array($row) ? $row : null;
     }
 
+    // Brza provjera postoji li email u sustavu.
     public function existsByEmail(string $email): bool
     {
         $stmt = $this->pdo->prepare('SELECT id FROM users WHERE email = ? LIMIT 1');
@@ -29,6 +31,7 @@ final class UserRepository
         return (bool)$stmt->fetch();
     }
 
+    // Provjera postoji li korisnik po ID-u.
     public function existsById(int $userId): bool
     {
         $stmt = $this->pdo->prepare('SELECT id FROM users WHERE id = ? LIMIT 1');
@@ -37,6 +40,7 @@ final class UserRepository
         return (bool)$stmt->fetch();
     }
 
+    // Sprema novog korisnika i vraca njegov ID.
     public function create(string $fullName, string $email, string $passwordHash): int
     {
         $stmt = $this->pdo->prepare('INSERT INTO users (full_name, email, password_hash) VALUES (?, ?, ?)');

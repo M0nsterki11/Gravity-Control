@@ -5,6 +5,7 @@ use App\Controller\ReservationController;
 use App\Controller\SessionController;
 use App\Http\JsonResponse;
 
+// Ucitava aplikacijski bootstrap i PDO konekciju.
 $pdo = require __DIR__ . '/../src/bootstrap.php';
 
 $path = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/';
@@ -13,6 +14,7 @@ if (str_starts_with($path, $basePath)) {
     $path = substr($path, strlen($basePath));
 }
 
+// Jednostavan router koji mapira URL na odgovarajuci controller endpoint.
 switch ($path) {
     case '/api/login':
         AuthController::login($pdo);

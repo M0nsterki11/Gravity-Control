@@ -18,6 +18,7 @@ use Throwable;
 
 final class ReservationController
 {
+    // Endpoint za rezervaciju: auth, CSRF, rate limit i upis rezervacije.
     public static function reserve(PDO $pdo): void
     {
         header('Content-Type: application/json; charset=utf-8');

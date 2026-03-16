@@ -1,7 +1,9 @@
 <?php
+// Zabranjuje cache za API odgovore i admin stranice.
 header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
 header('Pragma: no-cache');
 
+// Osnovna konfiguracija konekcije prema MySQL bazi.
 $DB_HOST = 'localhost';
 $DB_NAME = 'gravity_control';
 $DB_USER = 'root';      
@@ -14,6 +16,7 @@ $options = [
     PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
 ];
 
+// Pokusava otvoriti PDO konekciju i vraca JSON gresku ako baza nije dostupna.
 try {
     $pdo = new PDO($dsn, $DB_USER, $DB_PASS, $options);
 } catch (PDOException $e) {

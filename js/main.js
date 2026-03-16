@@ -9,6 +9,7 @@ import {
 import { populateSchedule } from "./schedule.js";
 import { loadUserFromStorage } from "./state/session.js";
 
+// Inicijalizira UI, auth i raspored nakon ucitavanja stranice.
 document.addEventListener("DOMContentLoaded", () => {
   if (window.AOS) {
     AOS.init({
@@ -47,6 +48,7 @@ document.addEventListener("DOMContentLoaded", () => {
 let lastScrollY = window.scrollY;
 let lastShowY = window.scrollY;
 
+// Sakriva/prikazuje header ovisno o smjeru i intenzitetu skrolanja.
 function setupHeaderScroll() {
   const header = document.querySelector(".main-header");
   if (!header) return;
@@ -76,6 +78,7 @@ function setupHeaderScroll() {
   });
 }
 
+// Upravljanje mobile navigacijom i zatvaranje menija na klik linka.
 function setupNav() {
   const navToggle = document.getElementById("nav-toggle");
   const navLinks = document.getElementById("nav-links");
@@ -98,6 +101,7 @@ function setupNav() {
   });
 }
 
+// Crta pozadinske partikule na canvasu i animira ih kroz requestAnimationFrame.
 function setupParticles() {
   const canvas = document.getElementById("bg-particles");
   if (!canvas) return;
@@ -184,6 +188,7 @@ function setupParticles() {
   requestAnimationFrame(loop);
 }
 
+// Otvara/slika gallery lightbox s podrskom za klik izvan i Escape.
 function setupImageLightbox() {
   const lightbox = document.getElementById("image-lightbox");
   const lightboxImg = document.getElementById("image-lightbox-img");

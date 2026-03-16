@@ -1,5 +1,5 @@
 <?php
-  session_start();
+session_start();
 require __DIR__ . '/config.php';
 require __DIR__ . '/rate_limit.php';
 require __DIR__ . '/security.php';
@@ -10,24 +10,23 @@ header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
 header('Pragma: no-cache');
 require_http_method('POST');
 
-// max 5 registracija u 10 minuta po IP
+// Ogranicava broj registracija po IP adresi.
 $ip = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
 $rateKey = 'register:' . $ip;
-
 if (!check_rate_limit($pdo, $rateKey, 5, 600)) {
     rate_limit_exceeded_response(
-        'Previše pokušaja registracije. Pokušaj ponovo za 10 minuta.'
+        'Previse pokusaja registracije. Pokusaj ponovo za 10 minuta.'
     );
 }
 
-// Čita JSON body
+// Cita i priprema JSON ulazne podatke.
 $input = json_decode(file_get_contents('php://input'), true);
-
 $fullName = trim($input['fullName'] ?? '');
-$email    = trim($input['email'] ?? '');
+$email = trim($input['email'] ?? '');
 $password = $input['password'] ?? '';
-$confirm  = $input['confirmPassword'] ?? '';
+$confirm = $input['confirmPassword'] ?? '';
 
+// Validira obavezna polja i osnovna pravila lozinke/emaila.
 if ($fullName === '' || $email === '' || $password === '' || $confirm === '') {
     echo json_encode(['success' => false, 'message' => 'Sva polja su obavezna.']);
     exit;
@@ -48,24 +47,22 @@ if (strlen($password) < 6) {
     exit;
 }
 
-// Provjeri jel email već zauzet
+// Provjerava postoji li vec korisnik s istim emailom.
 $stmt = $pdo->prepare('SELECT id FROM users WHERE email = ? LIMIT 1');
 $stmt->execute([$email]);
 $existing = $stmt->fetch();
 
 if ($existing) {
-    echo json_encode(['success' => false, 'message' => 'Korisnik s tim emailom već postoji.']);
+    echo json_encode(['success' => false, 'message' => 'Korisnik s tim emailom vec postoji.']);
     exit;
 }
 
-// Spremi usera
+// Stvara korisnika i hvata duplicate-key race condition.
 $hash = password_hash($password, PASSWORD_DEFAULT);
-
 try {
     $stmt = $pdo->prepare('INSERT INTO users (full_name, email, password_hash) VALUES (?, ?, ?)');
     $stmt->execute([$fullName, $email, $hash]);
 } catch (PDOException $e) {
-    // Ako postoji UNIQUE indeks na users.email, ovdje hvatamo race condition
     if ((string)$e->getCode() === '23000') {
         echo json_encode(['success' => false, 'message' => 'Korisnik s tim emailom vec postoji.']);
         exit;
@@ -73,8 +70,8 @@ try {
     throw $e;
 }
 
+// Nakon uspjeha kreira session i vraca user payload s CSRF tokenom.
 $userId = $pdo->lastInsertId();
-
 session_regenerate_id(true);
 $_SESSION['user_id'] = (int)$userId;
 $_SESSION['is_admin'] = 0;
@@ -84,12 +81,12 @@ $csrfToken = issue_csrf_token();
 
 echo json_encode([
     'success' => true,
-    'message' => 'Registracija uspješna.',
-    'user'    => [
-        'id'        => (int)$userId,
+    'message' => 'Registracija uspjesna.',
+    'user' => [
+        'id' => (int)$userId,
         'full_name' => $fullName,
-        'email'     => $email,
-        'is_admin'  => 0,
+        'email' => $email,
+        'is_admin' => 0,
         'csrf_token' => $csrfToken,
     ],
 ]);

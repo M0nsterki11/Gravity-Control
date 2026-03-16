@@ -1,3 +1,4 @@
+// ESLint pravila za sve frontend module u js/ direktoriju.
 export default [
   {
     files: ["js/**/*.js"],
