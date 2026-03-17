@@ -9,9 +9,9 @@ use App\Http\JsonResponse;
 $pdo = require __DIR__ . '/../src/bootstrap.php';
 
 $path = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/';
-$basePath = '/gravity-control/public';
-if (str_starts_with($path, $basePath)) {
-    $path = substr($path, strlen($basePath));
+$scriptBasePath = rtrim(str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'] ?? '')), '/');
+if ($scriptBasePath !== '' && str_starts_with($path, $scriptBasePath)) {
+    $path = substr($path, strlen($scriptBasePath));
 }
 
 // Jednostavan router koji mapira URL na odgovarajuci controller endpoint.

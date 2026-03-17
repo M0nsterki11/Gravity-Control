@@ -18,27 +18,29 @@ async function requestJson(url, { method = "GET", body, csrfToken = "" } = {}) {
   return { response, data };
 }
 
-// Poziva backend login endpoint.
+const API_BASE = "public/api";
+
+// Poziva API login endpoint.
 export async function loginRequest(email, password) {
-  const { data } = await requestJson("backend/login.php", {
+  const { data } = await requestJson(`${API_BASE}/login`, {
     method: "POST",
     body: { email, password },
   });
   return data;
 }
 
-// Poziva backend register endpoint.
+// Poziva API register endpoint.
 export async function registerRequest(fullName, email, password, confirmPassword) {
-  const { data } = await requestJson("backend/register.php", {
+  const { data } = await requestJson(`${API_BASE}/register`, {
     method: "POST",
     body: { fullName, email, password, confirmPassword },
   });
   return data;
 }
 
-// Poziva backend logout endpoint uz CSRF token.
+// Poziva API logout endpoint uz CSRF token.
 export async function logoutRequest(csrfToken) {
-  const { data } = await requestJson("backend/logout.php", {
+  const { data } = await requestJson(`${API_BASE}/logout`, {
     method: "POST",
     csrfToken,
   });
@@ -47,16 +49,17 @@ export async function logoutRequest(csrfToken) {
 
 // Dohvaca aktivne termine za raspored.
 export async function getSessionsRequest() {
-  const { data } = await requestJson("backend/get_sessions.php");
+  const { data } = await requestJson(`${API_BASE}/sessions`);
   return data;
 }
 
 // Salje rezervaciju odabranog termina korisniku.
 export async function reserveRequest(sessionId, sessionInfo, csrfToken) {
-  const { data } = await requestJson("backend/reserve.php", {
+  const { data } = await requestJson(`${API_BASE}/reserve`, {
     method: "POST",
     csrfToken,
     body: { sessionId, sessionInfo },
   });
   return data;
 }
+

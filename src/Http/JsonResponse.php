@@ -8,6 +8,7 @@ final class JsonResponse
     public static function send(array $payload, int $statusCode = 200): void
     {
         http_response_code($statusCode);
+        header('Content-Type: application/json; charset=utf-8');
         echo json_encode($payload);
         exit;
     }
@@ -24,3 +25,4 @@ final class JsonResponse
         self::send(array_merge(['success' => false, 'message' => $message], $payload), $statusCode);
     }
 }
+
