@@ -217,7 +217,11 @@ function setupImageLightbox() {
     });
   });
 
-  closeBtn?.addEventListener("click", closeLightbox);
+  if (closeBtn) {
+    closeBtn.addEventListener("click", closeLightbox);
+  } else {
+    console.error("Image lightbox close button not found in the DOM.");
+  }
 
   lightbox.addEventListener("click", (event) => {
     if (event.target === lightbox) {

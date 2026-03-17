@@ -32,5 +32,5 @@ switch ($path) {
         ReservationController::reserve($pdo);
         break;
     default:
-        JsonResponse::error('Endpoint nije pronaden.', 404);
+        JsonResponse::error('Endpoint not found.', 404);
 }

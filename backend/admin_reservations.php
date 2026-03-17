@@ -15,7 +15,7 @@ if (empty($_SESSION['user_id']) || $isAdmin !== 1) {
     exit;
 }
 
-// Dohvaca rezervacije zajedno s korisnikom i podacima termina.
+// Dohvaca rezervacije zajedno s korisnikom i termin podacima (ako postoje).
 $sql = "
     SELECT
         r.id,
