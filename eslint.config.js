@@ -1,7 +1,7 @@
-// ESLint pravila za sve frontend module u js/ direktoriju.
+// ESLint pravila za sve frontend module u public/js/ direktoriju.
 export default [
   {
-    files: ["js/**/*.js"],
+    files: ["public/js/**/*.js"],
     languageOptions: {
       ecmaVersion: "latest",
       sourceType: "module",
@@ -22,3 +22,5 @@ export default [
     },
   },
 ];
+
+

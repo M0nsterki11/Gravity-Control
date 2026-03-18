@@ -1,0 +1,12 @@
+.git
+.gitignore
+.editorconfig
+.prettierignore
+.prettierrc
+node_modules/
+vendor/
+tests/
+*.log
+.env
+.env.*
+docker-compose*.yml

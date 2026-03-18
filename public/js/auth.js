@@ -177,7 +177,7 @@ export function setupProfileAndLogout() {
 
     const isAdmin = Number(currentUser.is_admin) === 1;
     if (isAdmin) {
-      window.open("backend/admin_reservations.php", "_blank");
+      window.open("admin_reservations.php", "_blank");
       return;
     }
 

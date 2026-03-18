@@ -4,4 +4,5 @@ parameters:
     - src
     - backend
   excludePaths:
-    - backend/admin_reservations.php
+    - public/admin_reservations.php
+

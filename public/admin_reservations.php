@@ -1,7 +1,7 @@
 <?php
 // Pokrece session i ucitava PDO konekciju.
 session_start();
-require __DIR__ . '/config.php';
+require __DIR__ . '/../backend/config.php';
 
 header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
 header('Pragma: no-cache');
@@ -11,7 +11,7 @@ $isAdmin = isset($_SESSION['is_admin']) ? (int)$_SESSION['is_admin'] : 0;
 
 if (empty($_SESSION['user_id']) || $isAdmin !== 1) {
 
-    header('Location: ../index.html');
+    header('Location: index.html');
     exit;
 }
 
@@ -75,7 +75,7 @@ function formatSessionRow(array $row): string
     <meta charset="UTF-8">
     <title>Gravity Admin – Rezervacije</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/gravity-control/css/admin_res.css?v=1.2">
+    <link rel="stylesheet" href="css/admin_res.css?v=1.2">
 </head>
 <body>
 <div class="container">
@@ -126,3 +126,5 @@ function formatSessionRow(array $row): string
 </div>
 </body>
 </html>
+
+

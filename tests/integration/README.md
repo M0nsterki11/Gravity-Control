@@ -7,9 +7,10 @@ powershell -ExecutionPolicy Bypass -File tests/integration/run.ps1
 ```
 
 Skripta radi osnovne HTTP pozive prema lokalnoj instanci:
-- `POST /public/api/register`
-- `POST /public/api/login`
-- `GET /public/api/sessions`
-- `POST /public/api/reserve`
-- `POST /public/api/logout`
+- `POST /api/register`
+- `POST /api/login`
+- `GET /api/sessions`
+- `POST /api/reserve`
+- `POST /api/logout`
+
 

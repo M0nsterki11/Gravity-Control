@@ -3,7 +3,7 @@
   "private": true,
   "version": "1.0.0",
   "scripts": {
-    "lint:js": "eslint js/**/*.js",
+    "lint:js": "eslint public/js/**/*.js",
     "format:check": "prettier --check .",
     "format": "prettier --write ."
   },
@@ -12,3 +12,4 @@
     "prettier": "^3.4.2"
   }
 }
+

@@ -4,5 +4,6 @@
   <rule ref="PSR12"/>
   <file>src</file>
   <file>backend</file>
-  <exclude-pattern>backend/admin_reservations.php</exclude-pattern>
+  <exclude-pattern>public/admin_reservations.php</exclude-pattern>
 </ruleset>
+

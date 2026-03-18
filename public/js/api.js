@@ -18,7 +18,7 @@ async function requestJson(url, { method = "GET", body, csrfToken = "" } = {}) {
   return { response, data };
 }
 
-const API_BASE = "public/api";
+const API_BASE = "api";
 
 // Poziva API login endpoint.
 export async function loginRequest(email, password) {
@@ -62,4 +62,3 @@ export async function reserveRequest(sessionId, sessionInfo, csrfToken) {
   });
   return data;
 }
-
