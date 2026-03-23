@@ -57,7 +57,7 @@ export async function populateSchedule({ onRequireLogin, onSessionInvalid } = {}
       scheduleBody.appendChild(tr);
     });
 
-    // Delegirani handler za rezervaciju termina iz tablice.
+    // Delegirani handler za rezervaciju termina iz tablice - koristi data atribute za identifikaciju termina i sesije.
     scheduleBody.addEventListener("click", async (event) => {
       const target = event.target;
       if (!(target instanceof Element) || !target.matches("button[data-session]")) {

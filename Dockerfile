@@ -1,5 +1,6 @@
 FROM php:8.2-apache
 
+#Za railway
 RUN docker-php-ext-install pdo_mysql \
     && a2enmod rewrite headers expires \
     && echo "ServerName localhost" > /etc/apache2/conf-available/servername.conf \
