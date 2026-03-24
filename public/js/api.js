@@ -62,3 +62,40 @@ export async function reserveRequest(sessionId, sessionInfo, csrfToken) {
   });
   return data;
 }
+
+// Dohvaca admin podatke potrebne za CRUD rezervacija.
+export async function getAdminReservationsRequest() {
+  const { data } = await requestJson(`${API_BASE}/admin/reservations`);
+  return data;
+}
+
+// Kreira novu rezervaciju iz admin panela.
+export async function createAdminReservationRequest(userId, sessionId, csrfToken) {
+  const { data } = await requestJson(`${API_BASE}/admin/reservations`, {
+    method: "POST",
+    csrfToken,
+    body: { userId, sessionId },
+  });
+  return data;
+}
+
+// Azurira postojecu rezervaciju iz admin panela.
+export async function updateAdminReservationRequest(id, userId, sessionId, csrfToken) {
+  const { data } = await requestJson(`${API_BASE}/admin/reservations`, {
+    method: "PUT",
+    csrfToken,
+    body: { id, userId, sessionId },
+  });
+  return data;
+}
+
+// Brise rezervaciju iz admin panela.
+export async function deleteAdminReservationRequest(id, csrfToken) {
+  const { data } = await requestJson(`${API_BASE}/admin/reservations`, {
+    method: "DELETE",
+    csrfToken,
+    body: { id },
+  });
+  return data;
+}
+

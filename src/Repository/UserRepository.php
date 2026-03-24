@@ -10,6 +10,16 @@ final class UserRepository
     {
     }
 
+    // Vraca osnovne podatke svih korisnika za admin forme i tablice.
+    public function listAllBasic(): array
+    {
+        $stmt = $this->pdo->query(
+            'SELECT id, full_name, email, is_admin FROM users ORDER BY full_name ASC, email ASC'
+        );
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
+    }
+
     // Vraca korisnika po emailu ili null ako ne postoji.
     public function findByEmail(string $email): ?array
     {
@@ -49,3 +59,4 @@ final class UserRepository
         return (int)$this->pdo->lastInsertId();
     }
 }
+

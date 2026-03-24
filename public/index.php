@@ -31,6 +31,10 @@ switch ($path) {
     case '/api/reserve':
         ReservationController::reserve($pdo);
         break;
+    case '/api/admin/reservations':
+        ReservationController::adminCrud($pdo);
+        break;
     default:
         JsonResponse::error('Endpoint not found.', 404);
 }
+
