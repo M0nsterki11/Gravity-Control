@@ -1,18 +1,12 @@
 FROM php:8.2-apache
 
-ARG CACHE_BUST=3
+ARG CACHE_BUST=4
 
 RUN set -eux; \
     docker-php-ext-install pdo_mysql; \
-    rm -f /etc/apache2/mods-enabled/mpm_event.load /etc/apache2/mods-enabled/mpm_event.conf; \
-    rm -f /etc/apache2/mods-enabled/mpm_worker.load /etc/apache2/mods-enabled/mpm_worker.conf; \
-    rm -f /etc/apache2/mods-enabled/mpm_prefork.load /etc/apache2/mods-enabled/mpm_prefork.conf; \
-    a2enmod mpm_prefork; \
     a2enmod rewrite headers expires; \
     echo "ServerName localhost" > /etc/apache2/conf-available/servername.conf; \
-    a2enconf servername; \
-    ls -l /etc/apache2/mods-enabled/*mpm* || true; \
-    apache2ctl -M | grep mpm || true
+    a2enconf servername
 
 WORKDIR /var/www/html
 
@@ -26,4 +20,4 @@ RUN set -eux; \
 
 EXPOSE 80
 
-CMD ["sh", "-lc", "ls -l /etc/apache2/mods-enabled/*mpm*; apache2ctl -M; exec apache2-foreground"]
+CMD ["sh", "-lc", "rm -f /etc/apache2/mods-enabled/mpm_event.load /etc/apache2/mods-enabled/mpm_event.conf /etc/apache2/mods-enabled/mpm_worker.load /etc/apache2/mods-enabled/mpm_worker.conf; a2enmod mpm_prefork >/dev/null 2>&1 || true; ls -l /etc/apache2/mods-enabled/*mpm*; exec apache2-foreground"]
