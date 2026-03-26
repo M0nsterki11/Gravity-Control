@@ -966,6 +966,19 @@ body.no-scroll {
   .main-header {
     padding-inline: 3.5rem;
   }
+
+  .section-header {
+    text-align: center;
+  }
+
+  .section-header h2 {
+    font-size: 2.6rem;
+  }
+
+  .section-header p {
+    margin-inline: auto;
+  }
+
   .hero-section,
   .section,
   .video-section {
