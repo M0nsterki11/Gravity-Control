@@ -102,11 +102,14 @@ body::before {
   top: 0;
   left: 0;
   right: 0;
+  width: 100%;
+  box-sizing: border-box;
   transition: transform 0.25s ease-out, background 0.2s ease-out;
   z-index: 50;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
+  gap: 0;
   padding: 1.7rem 1.4rem;
   background: radial-gradient(circle at top left, rgba(255, 122, 26, 0.13), transparent 55%);
   backdrop-filter: blur(18px);
@@ -121,12 +124,16 @@ body::before {
   display: flex;
   align-items: center;
   gap: 1.4rem;
+  margin-left: auto;
+  flex: 0 0 auto;
+  min-width: 0;
 }
 
 /* Logo */
 .logo {
   display: flex;
   flex-direction: column;
+  flex: 0 0 auto;
   line-height: 1;
   font-family: 'Oswald', sans-serif;
   text-transform: uppercase;
@@ -294,12 +301,17 @@ body::before {
 .nav-toggle {
   display: none;
   flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
   gap: 4px;
   border: none;
   background: none;
   cursor: pointer;
   padding: 0.25rem;
-  margin-left: 1rem;
+  margin: 0 0 0 auto;
+  position: relative;
+  z-index: 52;
 }
 
 .nav-toggle span {
@@ -1103,23 +1115,41 @@ body.no-scroll {
     display: none;   
   }
 
+  .hero-title {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
+    padding-inline: clamp(0.35rem, 1.5vw, 0.55rem);
+  }
+
   .hero-title h1 {
     width: 100%;
     max-width: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
   }
 
   .gravity-word {
-    font-size: clamp(3rem, 14vw, 5.2rem);
-    letter-spacing: clamp(0.16em, 0.9vw, 0.24em);
-    line-height: 0.95;
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    white-space: nowrap;
+    font-size: clamp(2.55rem, 12vw, 4.25rem);
+    letter-spacing: 0.11em;
+    line-height: 0.92;
+    transform: none;
   }
 
   .gravity-top {
-    transform: translateX(clamp(-18px, -2vw, -6px));
+    text-align: left;
+    transform: none;
   }
 
   .gravity-bottom {
-    transform: translateX(clamp(8px, 2.8vw, 18px));
+    text-align: right;
+    transform: none;
   }
 
   .hero-section {
@@ -1168,10 +1198,14 @@ body.no-scroll {
 
 
 
-@media (max-width: 480px) {
+@media (max-width: 390px) {
+  .hero-title {
+    padding-inline: clamp(0.2rem, 1vw, 0.35rem);
+  }
+
   .gravity-word {
-    font-size: clamp(2.2rem, 14vw, 3.55rem);
-    letter-spacing: 0.095em;
+    font-size: clamp(2.1rem, 11.8vw, 3.2rem);
+    letter-spacing: 0.075em;
   }
 
   .gravity-top {

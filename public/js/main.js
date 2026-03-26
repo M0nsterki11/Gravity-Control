@@ -85,9 +85,14 @@ function setupNav() {
 
   if (!navToggle || !navLinks) return;
 
+  const syncNavState = () => {
+    navToggle.setAttribute("aria-expanded", String(navLinks.classList.contains("open")));
+  };
+
   navToggle.addEventListener("click", () => {
     navToggle.classList.toggle("active");
     navLinks.classList.toggle("open");
+    syncNavState();
   });
 
   navLinks.addEventListener("click", (event) => {
@@ -97,8 +102,11 @@ function setupNav() {
     if (target.tagName.toLowerCase() === "a") {
       navToggle.classList.remove("active");
       navLinks.classList.remove("open");
+      syncNavState();
     }
   });
+
+  syncNavState();
 }
 
 // Crta pozadinske partikule na canvasu i animira ih kroz requestAnimationFrame.
