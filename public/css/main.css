@@ -507,6 +507,7 @@ body::before {
 
 /* Schedule */
 .schedule-table-wrapper {
+  width: 100%;
   border-radius: var(--radius-lg);
   border: 3px solid var(--border-subtle);
   background: rgba(10, 10, 10, 0.92);
@@ -518,11 +519,13 @@ body::before {
 
 .schedule-table-scroll {
   width: 100%;
+  max-width: 100%;
   overflow-x: auto;
 }
 
 .schedule-table {
   width: 100%;
+  max-width: 100%;
   border-collapse: collapse;
   font-size: 0.85rem;
   min-width: 520px;
@@ -551,6 +554,26 @@ body::before {
 
 .schedule-table tbody tr:hover {
   background: rgba(255, 122, 26, 0.08);
+}
+
+.schedule-table-wrapper,
+.schedule-table-scroll,
+.schedule-table,
+.schedule-table th,
+.schedule-table td,
+.schedule-reserve-btn {
+  box-sizing: border-box;
+}
+
+.schedule-cell-value {
+  display: inline-block;
+  max-width: 100%;
+}
+
+.schedule-reserve-btn {
+  min-width: 8.6rem;
+  white-space: nowrap;
+  line-height: 1.1;
 }
 
 /* Trainers */
@@ -1195,17 +1218,127 @@ body.no-scroll {
     display: none;
   }
 
-  .schedule-table {
-    min-width: 0;          
-    width: 100%;
-    table-layout: fixed;   
+  .schedule-table-wrapper {
+    max-width: 100%;
+    padding: 0.55rem;
+    border-width: 1px;
   }
 
-  .schedule-table th,
+  .schedule-table-scroll {
+    overflow: visible;
+  }
+
+  .schedule-table {
+    display: block;
+    min-width: 0;
+    width: 100%;
+    max-width: 100%;
+    table-layout: auto;
+  }
+
+  .schedule-table thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  .schedule-table tbody {
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  .schedule-table tbody tr {
+    display: grid;
+    grid-template-columns: minmax(4.9rem, 5.4rem) minmax(0, 1fr);
+    gap: 0.42rem 0.72rem;
+    padding: 0.82rem 0.78rem;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.02);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.02);
+  }
+
+  .schedule-table tbody tr:nth-child(odd),
+  .schedule-table tbody tr:hover {
+    background: rgba(255, 255, 255, 0.02);
+  }
+
   .schedule-table td {
-    padding: 0.55rem 0.4rem;
-    font-size: 0.75rem;
-    word-break: break-word;  
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 0.72rem;
+    min-width: 0;
+    padding: 0;
+    border: 0;
+    text-align: left;
+    font-size: clamp(0.8rem, 2.8vw, 0.92rem);
+    line-height: 1.28;
+    word-break: normal;
+    overflow-wrap: anywhere;
+  }
+
+  .schedule-table td::before {
+    content: attr(data-label);
+    flex: 0 0 4.9rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 0.66rem;
+    line-height: 1.15;
+  }
+
+  .schedule-cell-value {
+    display: block;
+    min-width: 0;
+    text-align: right;
+    word-break: normal;
+    overflow-wrap: normal;
+  }
+
+  .schedule-cell-day .schedule-cell-value,
+  .schedule-cell-time .schedule-cell-value {
+    font-weight: 600;
+  }
+
+  .schedule-cell-type .schedule-cell-value,
+  .schedule-cell-coach .schedule-cell-value {
+    overflow-wrap: anywhere;
+  }
+
+  .schedule-cell-time .schedule-cell-value {
+    white-space: nowrap;
+  }
+
+  .schedule-action {
+    grid-column: 1 / -1;
+    margin-top: 0.15rem;
+    padding-top: 0.58rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.45rem;
+  }
+
+  .schedule-action::before {
+    flex: none;
+  }
+
+  .schedule-reserve-btn {
+    display: block;
+    width: 100%;
+    min-width: 0;
+    padding: 0.68rem 0.9rem;
+    font-size: clamp(0.74rem, 2.6vw, 0.82rem);
+    letter-spacing: 0.1em;
+    text-align: center;
   }
 }
 
@@ -1227,6 +1360,23 @@ body.no-scroll {
 
   .gravity-bottom {
     transform: translateX(0);
+  }
+
+  .schedule-table tbody tr {
+    grid-template-columns: minmax(4.35rem, 4.75rem) minmax(0, 1fr);
+    gap: 0.38rem 0.58rem;
+    padding: 0.72rem 0.68rem;
+  }
+
+  .schedule-table td::before {
+    flex-basis: 4.35rem;
+    font-size: 0.62rem;
+    letter-spacing: 0.07em;
+  }
+
+  .schedule-reserve-btn {
+    padding: 0.64rem 0.8rem;
+    letter-spacing: 0.08em;
   }
 
   .gallery-grid {
