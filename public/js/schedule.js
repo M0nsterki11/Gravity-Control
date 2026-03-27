@@ -2,19 +2,6 @@ import { getSessionsRequest, reserveRequest } from "./api.js";
 import { clearStoredUser, getCsrfToken, getCurrentUser } from "./state/session.js";
 import { showToast } from "./ui/toast.js";
 
-function createScheduleCell(label, value, className) {
-  const td = document.createElement("td");
-  td.className = `schedule-cell ${className}`;
-  td.dataset.label = label;
-
-  const valueSpan = document.createElement("span");
-  valueSpan.className = "schedule-cell-value";
-  valueSpan.textContent = value;
-
-  td.appendChild(valueSpan);
-  return td;
-}
-
 // Dohvaca termine, iscrtava tablicu i obraduje klik na rezervaciju.
 export async function populateSchedule({ onRequireLogin, onSessionInvalid } = {}) {
   const scheduleBody = document.getElementById("schedule-body");
@@ -32,7 +19,6 @@ export async function populateSchedule({ onRequireLogin, onSessionInvalid } = {}
     const sessions = data.sessions || [];
     sessions.forEach((session) => {
       const tr = document.createElement("tr");
-      tr.className = "schedule-row";
 
       const day = session.day ?? "";
       const type = session.type ?? "";
@@ -42,15 +28,23 @@ export async function populateSchedule({ onRequireLogin, onSessionInvalid } = {}
       const timeLabel = `${timeFrom} - ${timeTo}`;
       const sessionLabel = `${day} ${timeLabel}`;
 
-      tr.appendChild(createScheduleCell("Dan", day, "schedule-cell-day"));
-      tr.appendChild(createScheduleCell("Vrijeme", timeLabel, "schedule-cell-time"));
-      tr.appendChild(createScheduleCell("Tip", type, "schedule-cell-type"));
-      tr.appendChild(createScheduleCell("Trener", coach, "schedule-cell-coach"));
+      const tdDay = document.createElement("td");
+      tdDay.textContent = day;
+      tr.appendChild(tdDay);
+
+      const tdTime = document.createElement("td");
+      tdTime.textContent = timeLabel;
+      tr.appendChild(tdTime);
+
+      const tdType = document.createElement("td");
+      tdType.textContent = type;
+      tr.appendChild(tdType);
+
+      const tdCoach = document.createElement("td");
+      tdCoach.textContent = coach;
+      tr.appendChild(tdCoach);
 
       const tdAction = document.createElement("td");
-      tdAction.className = "schedule-cell schedule-action";
-      tdAction.dataset.label = "Rezervacija";
-
       const reserveBtn = document.createElement("button");
       reserveBtn.type = "button";
       reserveBtn.className = "btn btn-outline btn-small schedule-reserve-btn";
